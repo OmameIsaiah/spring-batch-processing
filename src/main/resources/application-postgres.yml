@@ -1,0 +1,51 @@
+server:
+  port: 3030
+  host: localhost
+  servlet:
+    contextPath: /batch-processing
+
+spring:
+  application:
+    name: batch-processing
+  batch:
+    jdbc:
+      initialize-schema: 'always' #always #never
+    job:
+      enabled: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${server.host}:<dbport>/spring_batch_db
+    username: <username>
+    password: <password>
+    jmx:
+      default-domain: batch-processing
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none #none, create, create-drop, update <create | create-drop | update | validate | none>
+      show-sql: 'true'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        id:
+          new_generator_mappings: false
+        jdbc:
+          time_zone: UTC+1
+        show_sql: false
+    show-sql: true
+  quartz:
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          jobStore:
+            isClustered: false
+            tablePrefix: QRTZ_
+          scheduler:
+            instanceName: MyScheduler
+          threadPool:
+            threadCount: 5

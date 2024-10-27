@@ -14,28 +14,28 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-    @QuartzDataSource
-    DataSource dataSource;
+  @QuartzDataSource
+  DataSource dataSource;
 
-    public DataSourceConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  public DataSourceConfig(DataSource dataSource){
+    this.dataSource = dataSource;
+  }
 
-    @Bean
-    @QuartzTransactionManager
-    public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource);
-    }
+  @Bean
+  @QuartzTransactionManager
+  public DataSourceTransactionManager transactionManager() {
+    return new DataSourceTransactionManager(dataSource);
+  }
 
-    @Bean
-    public DataSourceInitializer databasePopulator() {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-h2.sql"));
-        populator.setContinueOnError(false);
-        populator.setIgnoreFailedDrops(false);
-        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
-        dataSourceInitializer.setDataSource(dataSource);
-        dataSourceInitializer.setDatabasePopulator(populator);
-        return dataSourceInitializer;
-    }
+  @Bean
+  public DataSourceInitializer databasePopulator() {
+    ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+    populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-h2.sql"));
+    populator.setContinueOnError(false);
+    populator.setIgnoreFailedDrops(false);
+    DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+    dataSourceInitializer.setDataSource(dataSource);
+    dataSourceInitializer.setDatabasePopulator(populator);
+    return dataSourceInitializer;
+  }
 }

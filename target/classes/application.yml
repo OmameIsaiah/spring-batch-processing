@@ -1,33 +1,5 @@
-server:
-  port: 3030
-
 spring:
-  application:
-    name: spring-batch-processing
-  batch:
-    jdbc:
-      initialize-schema: 'always'
-    job:
-      enabled: false
-  datasource:
-    password: ''
-    url: jdbc:h2:mem:testdb
-    username: sa
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        trace: false
-  quartz:
-    job-store-type: jdbc
-    properties:
-      org:
-        quartz:
-          jobStore:
-            isClustered: false
-            tablePrefix: QRTZ_
-          scheduler:
-            instanceName: MyScheduler
-          threadPool:
-            threadCount: 5
+  profiles:
+    #active: postgres
+    active: h2
+    #active: mysql

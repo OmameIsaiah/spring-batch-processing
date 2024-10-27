@@ -1,6 +1,7 @@
 package com.batch.processing.job.config;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -14,6 +15,8 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 public class BatchConfig {
 
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
     DataSource dataSource;
 
     public BatchConfig(DataSource dataSource) {
@@ -28,8 +31,19 @@ public class BatchConfig {
     @Bean
     public DataSourceInitializer databasePopulator() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-h2.sql"));
-        populator.addScript(new ClassPathResource("sql/batch-schema.sql"));
+        if ("postgres".equalsIgnoreCase(activeProfile)) {
+            // For PostgreSQL
+            populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-postgresql.sql"));
+            populator.addScript(new ClassPathResource("sql/postgres-sql-batch-schema.sql"));
+        } else if ("mysql".equalsIgnoreCase(activeProfile)) {
+            // For MySQL
+            populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
+            populator.addScript(new ClassPathResource("sql/mysql-batch-schema.sql"));
+        } else {
+            // For H2 DB
+            populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-h2.sql"));
+            populator.addScript(new ClassPathResource("sql/batch-schema.sql"));
+        }
         populator.setContinueOnError(false);
         populator.setIgnoreFailedDrops(false);
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
